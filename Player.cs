@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // its access level: public or private
-    // its type: int (5, 8, 36, etc.), float (2.5f, 3.7f, etc.)
-    // its name: speed, playerSpeed --- Speed, PlayerSpeed
-    // optional: give it an initial value
+    // Fields
     private float speed;
     private int lives = 3;
     private int score = 0;
     private float horizontalInput;
     private float verticalInput;
-
+    public float maxYPositionup = -0.5f;
+    public float maxYPositiondown = -4f;
     public GameObject bullet;
 
     // Start is called before the first frame update
@@ -35,29 +33,31 @@ public class Player : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
         transform.Translate(new Vector3(horizontalInput, verticalInput, 0) * Time.deltaTime * speed);
 
-        // if (condition) { //do this }
-        // else if (other condition { //do that }
-        // else { //do this final }
+        Vector3 position = transform.position;
+
         if (transform.position.x > 11.5f || transform.position.x <= -11.5f)
         {
             transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);
         }
 
-        if (transform.position.y > 8.5f || transform.position.y <= -8.5f)
+        if (position.y > maxYPositionup)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y * -1, 0);
+            position.y = maxYPositionup;
         }
+        if (position.y < maxYPositiondown)
+        {
+            position.y = maxYPositiondown;
+        }
+
+        transform.position = position;
     }
 
     void Shooting()
     {
-        //if I press SPACE
-        //Create a bullet
+        // If I press SPACE, create a bullet
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            //Create a bullet
             Instantiate(bullet, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
         }
     }
-
 }
